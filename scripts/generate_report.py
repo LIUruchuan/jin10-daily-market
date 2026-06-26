@@ -220,6 +220,26 @@ document.getElementById('marketTable').innerHTML = html;
     print(f"[SAVED] reports/index.html")
 
 
+def write_summary_json(events: list[dict], market: dict):
+    """写入 data/summary.json 供 Workflow 通知使用"""
+    important = [e for e in events if e.get("important") == 1]
+    sector_counts = Counter()
+    for e in events:
+        for s in e.get("sectors", "").split(","):
+            if s.strip():
+                sector_counts[s.strip()] += 1
+
+    outcome = {
+        "total_events": len(events),
+        "important_events": len(important),
+        "top_sectors": [s for s, _ in sector_counts.most_common(3)],
+        "indices": market.get("indices", []),
+    }
+    with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
+        json.dump(outcome, f, ensure_ascii=False, indent=2)
+    print("[SAVED] data/history/summary.json")
+
+
 def main():
     print("=" * 50)
     print(f"生成日报: {datetime.now(timezone(timedelta(hours=8)))}")
@@ -238,6 +258,9 @@ def main():
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
     print(f"[SAVED] {report_path}")
+
+    # 写入 summary JSON（供 Workflow 通知读取）
+    write_summary_json(events, market)
 
     update_index_html()
 
