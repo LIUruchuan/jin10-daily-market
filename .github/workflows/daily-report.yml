@@ -84,45 +84,14 @@ jobs:
             echo "No SERVERCHAN_SENDKEY, skip notify."
             exit 0
           fi
-
           DATE=$(date +'%Y-%m-%d')
-          PAGE_URL="https://liuruchuan.github.io/jin10-daily-market/"
-
-          SUMMARY_FILE="data/summary.json"
-          if [ -f "$SUMMARY_FILE" ]; then
-            eval $(python3 -c "
+          DESP=$(python3 -c "
 import json
-with open('$SUMMARY_FILE') as f:
+with open('data/history/summary.json') as f:
     d = json.load(f)
-print(f'TOTAL={d.get(\"total_events\", 0)}')
-print(f'IMP={d.get(\"important_events\", 0)}')
-top3 = d.get('top_sectors', [])
-print(f'SECT_1={top3[0] if len(top3)>0 else \"\"}')
-print(f'SECT_2={top3[1] if len(top3)>1 else \"\"}')
-print(f'SECT_3={top3[2] if len(top3)>2 else \"\"}')
-idx = d.get('indices', [{}])[0]
-print(f'IDX_NAME={idx.get(\"name\",\"\")}')
-print(f'IDX_CLOSE={idx.get(\"close\",0):.0f}')
-print(f'IDX_PCT={idx.get(\"pct_change\",0):+.2f}')
+print(d.get('notify_html', '<p>数据获取中...</p>'))
 ")
-
-            desp="<h3>金十数据日报</h3>"
-            desp="$desp<p><b>日期</b>: ${DATE} | <b>事件</b>: ${TOTAL}条 (重要:${IMP}条)</p>"
-            if [ -n "$SECT_1" ]; then
-              desp="$desp<p><b>事件热点</b>: ${SECT_1}${SECT_2:+, $SECT_2}${SECT_3:+, $SECT_3}</p>"
-            fi
-            if [ -n "${IDX_NAME}" ]; then
-              color="#e74c3c"; if [ "${IDX_PCT:0:1}" = "-" ]; then color="#27ae60"; fi
-              desp="$desp<p><b>${IDX_NAME}</b>: <span style='color:${color};font-weight:bold;'>${IDX_CLOSE} (${IDX_PCT}%)</span></p>"
-            fi
-            desp="$desp<br/><a href='${PAGE_URL}'>查看完整报告 &rarr;</a>"
-          else
-            desp="<h3>金十数据日报</h3><p>${DATE}</p><br/><a href='${PAGE_URL}'>查看完整报告 &rarr;</a>"
-          fi
-
-          desp="$desp<hr/><p style='color:#999;font-size:12px;'>每日 08:00 自动推送</p>"
-
           curl -s -X POST "https://sctapi.ftqq.com/$SERVERCHAN_SENDKEY.send" \
             -H "Content-Type: application/json" \
-            -d "{\"title\":\"金十日报 (${DATE})\",\"desp\":\"${desp}\"}"
+            -d "{\"title\":\"金十日报 (${DATE})\",\"desp\":\"${DESP}\"}"
           echo "Server酱 通知已发送"
