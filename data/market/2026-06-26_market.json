@@ -1,5 +1,10 @@
 {
   "date": "2026-06-26",
   "indices": [],
-  "sectors": []
+  "sectors": [],
+  "sector_detail": {
+    "top_gainers": [],
+    "top_losers": [],
+    "raw": []
+  }
 }
