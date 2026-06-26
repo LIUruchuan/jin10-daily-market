@@ -62,9 +62,10 @@ def generate_markdown_report(events: list[dict], market: dict) -> str:
     beijing = datetime.now(timezone(timedelta(hours=8)))
     date_str = beijing.strftime("%Y-%m-%d")
 
-    # 分类事件
-    important = [e for e in events if e.get("important") == 1]
-    normal = [e for e in events if e.get("important") != 1]
+    # 分类事件 by evidence tier
+    strong_events = [e for e in events if e.get("evidence") == "strong"]
+    medium_events = [e for e in events if e.get("evidence") == "medium"]
+    weak_events = [e for e in events if e.get("evidence") == "weak"]
 
     # 统计板块出现频率
     sector_counts = Counter()
@@ -73,20 +74,38 @@ def generate_markdown_report(events: list[dict], market: dict) -> str:
             if s.strip():
                 sector_counts[s.strip()] += 1
 
-    lines = [f"# 📰 金十数据·每日要闻", "", f"**日期**: {date_str}", f"**数据源**: 金十 Flash API + akshare", "", "---", ""]
+    lines = [f"# 金十数据·每日要闻", "", f"**日期**: {date_str}", f"**数据源**: 金十 Flash API + akshare", "", "---", ""]
 
-    # 重要事件
-    if important:
-        lines.append(f"## 🔴 重要事件 ({len(important)}条)")
+    # 高置信度事件（strong evidence）
+    if strong_events:
+        lines.append(f"## 高置信度事件 ({len(strong_events)}条)")
         lines.append("")
-        for e in important[:10]:
+        for e in strong_events[:10]:
             lines.append(f"- **[{e.get('time', '')[:16]}]** {e.get('content', '')[:120]}")
             lines.append(f"  - 关联板块: {e.get('sectors', '综合')}")
             lines.append("")
     else:
-        lines.append("## 🔴 重要事件")
+        lines.append("## 高置信度事件")
         lines.append("")
-        lines.append("今日无重要事件。")
+        lines.append("今日无高置信度事件。")
+        lines.append("")
+
+    # 中等置信度事件
+    if medium_events:
+        lines.append(f"## 中等置信度事件 ({len(medium_events)}条)")
+        lines.append("")
+        for e in medium_events[:8]:
+            lines.append(f"- [{e.get('time', '')[:16]}] {e.get('content', '')[:100]}")
+        lines.append("")
+
+    # 低置信度事件（弱信号——可能不具备参考价值）
+    if weak_events:
+        lines.append(f"## 弱信号 / 待验证 ({len(weak_events)}条)")
+        lines.append("")
+        lines.append("以下事件的证据来自社交媒体、传闻或分析师观点，仅供参考，需进一步核实。")
+        lines.append("")
+        for e in weak_events[:5]:
+            lines.append(f"- [{e.get('time', '')[:16]}] {e.get('content', '')[:100]}")
         lines.append("")
 
     # 市场概况
@@ -222,7 +241,10 @@ document.getElementById('marketTable').innerHTML = html;
 
 def write_summary_json(events: list[dict], market: dict):
     """写入 data/summary.json 供 Workflow 通知使用，同时生成通知 HTML"""
-    important = [e for e in events if e.get("important") == 1]
+    strong = [e for e in events if e.get("evidence") == "strong"]
+    medium = [e for e in events if e.get("evidence") == "medium"]
+    weak = [e for e in events if e.get("evidence") == "weak"]
+
     sector_counts = Counter()
     for e in events:
         for s in e.get("sectors", "").split(","):
@@ -235,10 +257,16 @@ def write_summary_json(events: list[dict], market: dict):
     # 生成通知 HTML
     lines = []
     lines.append('<h3>金十数据日报</h3>')
-    lines.append(f'<p><b>事件</b>: {len(events)}条 (重要:{len(important)}条)</p>')
+    lines.append(f'<p><b>事件</b>: {len(events)}条 | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}</p>')
+
+    # 优先展示 high-confidence events
+    if strong:
+        lines.append('<p style="color:#c0392b;"><b>重要事件:</b></p>')
+        for e in strong[:3]:
+            lines.append(f'<p style="margin:2px 0;font-size:13px;">· {e.get("content","")[:80]}</p>')
 
     if top_sectors:
-        lines.append(f'<p><b>热点</b>: {", ".join(top_sectors)}</p>')
+        lines.append(f'<p><b>热点板块</b>: {", ".join(top_sectors)}</p>')
 
     if indices:
         idx = indices[0]
@@ -251,7 +279,9 @@ def write_summary_json(events: list[dict], market: dict):
 
     outcome = {
         "total_events": len(events),
-        "important_events": len(important),
+        "strong_events": len(strong),
+        "medium_events": len(medium),
+        "weak_events": len(weak),
         "top_sectors": top_sectors,
         "indices": indices,
         "notify_html": "\n".join(lines),
