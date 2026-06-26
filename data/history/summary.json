@@ -1,0 +1,11 @@
+{
+  "total_events": 19,
+  "important_events": 8,
+  "top_sectors": [
+    "综合",
+    "半导体",
+    "贵金属"
+  ],
+  "indices": [],
+  "notify_html": "<h3>金十数据日报</h3>\n<p><b>事件</b>: 19条 (重要:8条)</p>\n<p><b>热点</b>: 综合, 半导体, 贵金属</p>\n<br/><a href=\"https://liuruchuan.github.io/jin10-daily-market/\">查看完整报告 →</a>\n<hr/><p style=\"color:#999;font-size:12px;\">每日 08:00 自动推送</p>"
+}
