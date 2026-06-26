@@ -221,7 +221,7 @@ document.getElementById('marketTable').innerHTML = html;
 
 
 def write_summary_json(events: list[dict], market: dict):
-    """写入 data/summary.json 供 Workflow 通知使用"""
+    """写入 data/summary.json 供 Workflow 通知使用，同时生成通知 HTML"""
     important = [e for e in events if e.get("important") == 1]
     sector_counts = Counter()
     for e in events:
@@ -229,11 +229,32 @@ def write_summary_json(events: list[dict], market: dict):
             if s.strip():
                 sector_counts[s.strip()] += 1
 
+    top_sectors = [s for s, _ in sector_counts.most_common(3)]
+    indices = market.get("indices", [])
+
+    # 生成通知 HTML
+    lines = []
+    lines.append('<h3>金十数据日报</h3>')
+    lines.append(f'<p><b>事件</b>: {len(events)}条 (重要:{len(important)}条)</p>')
+
+    if top_sectors:
+        lines.append(f'<p><b>热点</b>: {", ".join(top_sectors)}</p>')
+
+    if indices:
+        idx = indices[0]
+        pct = idx.get("pct_change", 0)
+        color = "#e74c3c" if pct >= 0 else "#27ae60"
+        lines.append(f'<p><b>{idx["name"]}</b>: <span style="color:{color};font-weight:bold;">{idx.get("close",0):.0f} ({pct:+.2f}%)</span></p>')
+
+    lines.append('<br/><a href="https://liuruchuan.github.io/jin10-daily-market/">查看完整报告 →</a>')
+    lines.append('<hr/><p style="color:#999;font-size:12px;">每日 08:00 自动推送</p>')
+
     outcome = {
         "total_events": len(events),
         "important_events": len(important),
-        "top_sectors": [s for s, _ in sector_counts.most_common(3)],
-        "indices": market.get("indices", []),
+        "top_sectors": top_sectors,
+        "indices": indices,
+        "notify_html": "\n".join(lines),
     }
     with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
         json.dump(outcome, f, ensure_ascii=False, indent=2)
