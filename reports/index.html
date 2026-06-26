@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金十数据日报</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+h1 { color: #333; border-bottom: 2px solid #c0392b; padding-bottom: 10px; }
+.card { background: white; border-radius: 12px; padding: 20px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.price-up { color: #e74c3c; font-weight: bold; }
+.price-down { color: #27ae60; font-weight: bold; }
+.report-list { list-style: none; padding: 0; }
+.report-item { background: white; margin: 6px 0; padding: 10px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.report-item a { color: #c0392b; text-decoration: none; }
+.report-item a:hover { text-decoration: underline; }
+.footer { margin-top: 30px; color: #aaa; font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<h1>📰 金十数据 · 每日要闻与市场</h1>
+
+<div class="card">
+<h3>📊 最新市场数据 (2026-06-26)</h3>
+<div id="marketTable"></div>
+</div>
+
+<div class="card">
+<h3>📅 历史日报</h3>
+<ul class="report-list"><li class="report-item"><a href="2026-06-26-金十日报.md">2026-06-26-金十日报.md</a></li></ul>
+</div>
+
+<div class="footer"><p>自动更新 · 每天 08:00 CST</p></div>
+
+<script>
+const indices = [];
+let html = '<table style="width:100%;text-align:center;border-collapse:collapse;">';
+html += '<tr style="background:#f0f0f0;"><th>指数</th><th>收盘价</th><th>涨跌幅</th></tr>';
+indices.forEach(function(i) {
+  const css = i.pct_change > 0 ? "price-up" : "price-down";
+  const signal = i.pct_change > 0 ? "&#9650;" : "&#9660;";
+  html += '<tr><td>' + i.name + '</td><td>' + i.close.toFixed(0) + '</td><td class="' + css + '">' + signal + ' ' + i.pct_change.toFixed(2) + '%</td></tr>';
+});
+html += '</table>';
+document.getElementById('marketTable').innerHTML = html;
+</script>
+</body>
+</html>
