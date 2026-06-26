@@ -19,6 +19,7 @@ for d in [MARKET_DIR, HISTORY_DIR]:
     d.mkdir(exist_ok=True)
 
 MARKET_CSV = HISTORY_DIR / "market_history.csv"
+SECTOR_CSV = HISTORY_DIR / "sector_ranking_history.csv"
 
 # 追踪的主要指数
 INDEX_CODES = [
@@ -69,33 +70,47 @@ def fetch_index_data() -> list[dict]:
     return results
 
 
-def fetch_sector_data() -> list[dict]:
-    """获取板块当日行情"""
-    results = []
+def fetch_sector_data() -> dict:
+    """获取当日动态板块排行（涨幅前10 + 跌幅前10）"""
+    result = {"top_gainers": [], "top_losers": [], "raw": []}
     import akshare as ak
-    today = date.today().strftime("%Y%m%d")
+    try:
+        # 概念板块实时行情（动态获取全量）
+        df = ak.stock_board_concept_name_em()
+        if df is not None and not df.empty:
+            # 列: 排名,板块名称,板块代码,最新价,涨跌额,涨跌幅,总市值,换手率,上涨家数,下跌家数,领涨股票,领涨股票-涨跌幅
+            for _, row in df.iterrows():
+                name = str(row.get("板块名称", ""))
+                code = str(row.get("板块代码", ""))
+                pct = float(row.get("涨跌幅", 0))
+                price = float(row.get("最新价", 0))
+                lead = str(row.get("领涨股票", ""))
+                if name and code:
+                    result["raw"].append({
+                        "name": name,
+                        "code": code,
+                        "pct_change": pct,
+                        "close": price,
+                        "lead_stock": lead,
+                    })
 
-    for code, name in SECTOR_CODES:
-        try:
-            df = ak.stock_board_industry_hist_em(symbol=name, period="daily", start_date=today, end_date=today, adjust="")
-            if df is not None and not df.empty:
-                row = df.iloc[0] if len(df) > 0 else df.iloc[-1]
-                results.append({
-                    "name": name,
-                    "code": code,
-                    "close": float(row.get("收盘", 0)),
-                    "pct_change": float(row.get("涨跌幅", 0)),
-                })
-        except Exception as e:
-            print(f"[WARN] 板块 {name} 获取失败: {e}")
-    return results
+            # 按涨跌幅排序
+            result["raw"].sort(key=lambda x: x["pct_change"], reverse=True)
+            result["top_gainers"] = result["raw"][:10]
+            result["top_losers"] = result["raw"][-10:]
+            result["top_losers"].reverse()  # 跌幅最大的在前
+    except Exception as e:
+        print(f"[WARN] 动态板块排行获取失败: {e}")
+
+    return result
 
 
-def update_market_csv(indices: list[dict], sectors: list[dict]):
-    """追加一行行情数据到 CSV"""
+def update_market_csv(indices: list[dict], sector_data: dict):
+    """追加指数行情到 CSV，板块排行存另一张表"""
     beijing = datetime.now(timezone(timedelta(hours=8)))
     date_str = beijing.strftime("%Y-%m-%d")
 
+    # 指数 CSV
     is_new = not MARKET_CSV.exists()
     with open(MARKET_CSV, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -104,21 +119,28 @@ def update_market_csv(indices: list[dict], sectors: list[dict]):
             for idx in indices:
                 header.append(f"{idx['name']}_close")
                 header.append(f"{idx['name']}_pct")
-            for sec in sectors:
-                header.append(f"{sec['name']}_close")
-                header.append(f"{sec['name']}_pct")
             writer.writerow(header)
-
         row = [date_str]
         for idx in indices:
             row.append(idx.get("close", ""))
             row.append(idx.get("pct_change", ""))
-        for sec in sectors:
-            row.append(sec.get("close", ""))
-            row.append(sec.get("pct_change", ""))
         writer.writerow(row)
 
-    print(f"[SAVED] market_history.csv 追加: {date_str}")
+    # 板块排行 CSV（动态字段）
+    top_gainers = sector_data.get("top_gainers", []) if sector_data else []
+    top_losers = sector_data.get("top_losers", []) if sector_data else []
+
+    is_new_sec = not SECTOR_CSV.exists()
+    with open(SECTOR_CSV, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if is_new_sec:
+            writer.writerow(["date", "rank", "type", "name", "pct_change", "lead_stock"])
+        for i, sec in enumerate(top_gainers):
+            writer.writerow([date_str, i+1, "gain", sec["name"], sec["pct_change"], sec.get("lead_stock", "")])
+        for i, sec in enumerate(top_losers):
+            writer.writerow([date_str, i+1, "loss", sec["name"], sec["pct_change"], sec.get("lead_stock", "")])
+
+    print(f"[SAVED] market_history.csv + sector_ranking_history.csv 追加: {date_str}")
 
 
 def main():
@@ -137,23 +159,37 @@ def main():
         indices = []
 
     try:
-        sectors = fetch_sector_data()
-        print(f"  · 板块: {len(sectors)} 个")
-        for sec in sorted(sectors, key=lambda x: x.get("pct_change", 0), reverse=True):
-            signal = "↑" if sec.get("pct_change", 0) > 0 else "↓"
-            print(f"    {sec['name']}: {signal}{sec['pct_change']:.2f}%")
+        sector_data = fetch_sector_data()
+        top = sector_data.get("top_gainers", [])
+        bottom = sector_data.get("top_losers", [])
+        print(f"  · 动态板块排行: 涨幅TOP10 + 跌幅TOP10")
+
+        print("  📈 涨幅前3:")
+        for sec in top[:3]:
+            lead = sec.get("lead_stock", "")
+            lead_str = f" (领涨: {lead})" if lead else ""
+            print(f"    {sec['name']}: +{sec['pct_change']:.2f}%{lead_str}")
+        print("  📉 跌幅前3:")
+        for sec in bottom[:3]:
+            print(f"    {sec['name']}: {sec['pct_change']:.2f}%")
     except Exception as e:
         print(f"  · 板块获取异常: {e}")
-        sectors = []
+        sector_data = {"top_gainers": [], "top_losers": []}
 
     # 保存 JSON 快照
     beijing = datetime.now(timezone(timedelta(hours=8)))
     date_str = beijing.strftime("%Y-%m-%d")
-    snapshot = {"date": date_str, "indices": indices, "sectors": sectors}
+
+    # 格式化 sectors 给 generate_report 用
+    sectors_for_report = []
+    for sec in (sector_data.get("top_gainers", []) + sector_data.get("top_losers", [])):
+        sectors_for_report.append({"name": sec["name"], "pct_change": sec["pct_change"]})
+
+    snapshot = {"date": date_str, "indices": indices, "sectors": sectors_for_report, "sector_detail": sector_data}
     with open(MARKET_DIR / f"{date_str}_market.json", "w", encoding="utf-8") as f:
         json.dump(snapshot, f, ensure_ascii=False, indent=2)
 
-    update_market_csv(indices, sectors)
+    update_market_csv(indices, sector_data)
 
     print("\n== 完成 ==")
 
