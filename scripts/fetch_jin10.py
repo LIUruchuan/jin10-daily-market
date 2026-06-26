@@ -49,6 +49,33 @@ SECTOR_KEYWORDS = {
     "出口|进口|外贸|关税|贸易逆差": "出口贸易",
 }
 
+# 证据分级规则（Serenity evidence ladder）
+# strong: 官方数据/央行操作/交易所公告
+# medium: 正规财经媒体/行业数据
+# weak: KOL/社交/传闻/分析观点
+STRONG_PATTERNS = [
+    r"(?:公布|发布|出炉).*?(?:GDP|CPI|PPI|PMI|社融|M2|进出口|贸易|零售|工业增加值)",
+    r"(?:央行|人民银行|美联储|欧央行).*?(?:逆回购|MLF|LPR|降息|加息|降准|利率)",
+    r"(?:交易所|证监会|上交所|深交所).*?(?:公告|问询|监管)",
+    r"(?:国家统计局|财政部|商务部|发改委|工信部).*?(?:数据|发布|通知)",
+    r"(?:公司|集团).*?(?:公告|披露|发布).*?(?:财报|年报|季报|业绩)",
+    r"(?:初请|非农|CPI|GDP|PMI).*?(?:数据|报告)",
+]
+
+MEDIUM_PATTERNS = [
+    r"(?:据.*?(?:报道|消息|获悉|了解))",
+    r"(?:研报|分析|预计|预测|展望)",
+    r"(?:机构|分析师|经济学家).*?(?:表示|认为|指出)",
+    r"(?:行业|产业).*?(?:数据|报告|统计)",
+]
+
+WEAK_PATTERNS = [
+    r"(?:传闻|消息人士|知情人士|市场传言)",
+    r"(?:KOL|大V|博主|网友|热议)",
+    r"(?:猜测|可能|或将|疑似)",
+    r"(?:情绪|恐慌|狂欢|炒作)",
+]
+
 
 def classify_sector(content: str) -> list[str]:
     """根据内容关键词识别关联板块"""
@@ -57,6 +84,20 @@ def classify_sector(content: str) -> list[str]:
         if re.search(pattern, content):
             sectors.append(sector)
     return sectors if sectors else ["综合"]
+
+
+def classify_evidence(content: str) -> str:
+    """按 Serenity evidence ladder 给事件分级: strong / medium / weak"""
+    for pat in STRONG_PATTERNS:
+        if re.search(pat, content):
+            return "strong"
+    for pat in MEDIUM_PATTERNS:
+        if re.search(pat, content):
+            return "medium"
+    for pat in WEAK_PATTERNS:
+        if re.search(pat, content):
+            return "weak"
+    return "medium"  # 默认中等
 
 
 def fetch_jin10_events(hours: int = 24) -> list[dict]:
@@ -104,12 +145,17 @@ def fetch_jin10_events(hours: int = 24) -> list[dict]:
                     continue
 
                 sectors = classify_sector(content)
+                evidence = classify_evidence(content)
+                # important 标记的事件自动升级到 strong
+                if item.get("important", 0) == 1 and evidence != "strong":
+                    evidence = "strong"
                 all_events.append({
                     "id": item.get("id", ""),
                     "time": item["time"],
                     "content": content.strip(),
                     "important": item.get("important", 0),
                     "sectors": ",".join(sectors),
+                    "evidence": evidence,
                     "has_market_data": "remark" in item and bool(item.get("remark")),
                 })
 
@@ -147,17 +193,15 @@ def save_events(events: list[dict]):
     with open(EVENTS_CSV, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if is_new:
-            writer.writerow(["date", "time", "content", "important", "sectors"])
+            writer.writerow(["date", "time", "content", "important", "sectors", "evidence"])
         for e in events:
-            # 检查今日是否已有同一 ID
-            if not is_new:
-                pass  # 简单追加，让 generate_report 去重
             writer.writerow([
                 date_str,
                 e["time"],
                 e["content"],
                 e["important"],
                 e["sectors"],
+                e.get("evidence", "medium"),
             ])
     print(f"[SAVED] events_history.csv 追加 {len(events)} 条")
 
@@ -170,10 +214,12 @@ def main():
     events = fetch_jin10_events(hours=24)
     save_events(events)
 
-    important = [e for e in events if e["important"] == 1]
-    print(f"  · 重要事件: {len(important)} 条")
-    for e in important[:5]:
-        print(f"    [{e['time']}] {e['content'][:60]}... | 板块: {e['sectors']}")
+    strong = [e for e in events if e.get("evidence") == "strong"]
+    medium = [e for e in events if e.get("evidence") == "medium"]
+    weak = [e for e in events if e.get("evidence") == "weak"]
+    print(f"  · 事件分级: strong={len(strong)} medium={len(medium)} weak={len(weak)}")
+    for e in strong[:5]:
+        print(f"    [strong] [{e['time']}] {e['content'][:60]}...")
 
     print("\n== 完成 ==")
 
