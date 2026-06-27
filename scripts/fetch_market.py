@@ -71,36 +71,60 @@ def fetch_index_data() -> list[dict]:
 
 
 def fetch_sector_data() -> dict:
-    """获取当日动态板块排行（涨幅前10 + 跌幅前10）"""
+    """获取当日动态板块排行（行业板块为主，概念板块为辅）"""
     result = {"top_gainers": [], "top_losers": [], "raw": []}
     import akshare as ak
-    try:
-        # 概念板块实时行情（动态获取全量）
-        df = ak.stock_board_concept_name_em()
-        if df is not None and not df.empty:
-            # 列: 排名,板块名称,板块代码,最新价,涨跌额,涨跌幅,总市值,换手率,上涨家数,下跌家数,领涨股票,领涨股票-涨跌幅
-            for _, row in df.iterrows():
-                name = str(row.get("板块名称", ""))
-                code = str(row.get("板块代码", ""))
-                pct = float(row.get("涨跌幅", 0))
-                price = float(row.get("最新价", 0))
-                lead = str(row.get("领涨股票", ""))
-                if name and code:
-                    result["raw"].append({
-                        "name": name,
-                        "code": code,
-                        "pct_change": pct,
-                        "close": price,
-                        "lead_stock": lead,
-                    })
 
-            # 按涨跌幅排序
-            result["raw"].sort(key=lambda x: x["pct_change"], reverse=True)
-            result["top_gainers"] = result["raw"][:10]
-            result["top_losers"] = result["raw"][-10:]
-            result["top_losers"].reverse()  # 跌幅最大的在前
+    def load_df(df, source_name: str):
+        """从 DataFrame 中提取板块数据"""
+        count = 0
+        for _, row in df.iterrows():
+            name = str(row.get("板块名称", "")).strip()
+            if not name:
+                continue
+            pct = float(row.get("涨跌幅", 0) or 0)
+            price = float(row.get("最新价", 0) or 0)
+            lead = str(row.get("领涨股票", "") or "")
+            if name:
+                result["raw"].append({
+                    "name": name, "pct_change": pct,
+                    "close": price, "lead_stock": lead, "source": source_name,
+                })
+                count += 1
+        return count
+
+    try:
+        # 1) 行业板块（匹配事件分类用）
+        df_ind = ak.stock_board_industry_name_em()
+        if df_ind is not None and not df_ind.empty:
+            load_df(df_ind, "industry")
     except Exception as e:
-        print(f"[WARN] 动态板块排行获取失败: {e}")
+        print(f"[WARN] 行业板块获取失败: {e}")
+
+    try:
+        # 2) 概念板块（补充热点排行）
+        df_con = ak.stock_board_concept_name_em()
+        if df_con is not None and not df_con.empty:
+            load_df(df_con, "concept")
+    except Exception as e:
+        print(f"[WARN] 概念板块获取失败: {e}")
+
+    # 按涨跌幅排序
+    result["raw"].sort(key=lambda x: x["pct_change"], reverse=True)
+
+    # 行业板块优先用于匹配事件（放在前面）
+    industry = [r for r in result["raw"] if r.get("source") == "industry"]
+    concept = [r for r in result["raw"] if r.get("source") == "concept"]
+
+    # TOP10 涨幅 / 跌幅（混合）
+    result["top_gainers"] = result["raw"][:10]
+    result["top_losers"] = result["raw"][-10:]
+    result["top_losers"].reverse()
+
+    if industry:
+        result["industry_perf"] = {r["name"]: r["pct_change"] for r in industry}
+    else:
+        result["industry_perf"] = {}
 
     return result
 
