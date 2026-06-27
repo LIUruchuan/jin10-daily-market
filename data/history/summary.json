@@ -1,13 +1,13 @@
 {
-  "total_events": 18,
-  "strong_events": 7,
-  "medium_events": 11,
+  "total_events": 20,
+  "strong_events": 4,
+  "medium_events": 16,
   "weak_events": 0,
   "top_sectors": [
     "综合",
-    "半导体",
-    "新能源"
+    "军工",
+    "能源"
   ],
   "indices": [],
-  "notify_html": "<h3>金十数据日报</h3>\n<p><b>事件</b>: 18条 | 高置信度 7 · 中 11 · 弱 0</p>\n<p style=\"color:#c0392b;\"><b>重要事件:</b></p>\n<p style=\"margin:2px 0;font-size:13px;\">· 【我国核聚变堆超导磁体研发取得重要突破】金十数据6月27日讯，今天（27日），国家重大科技基础设施“聚变堆主机关键系统综合研究设施”最大的超导部件——环向场磁体</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 【金十数据整理：中东局势跟踪（6月27日）】<br/><b>①伊朗</b><br/><span class=\"section-news\">1. 伊朗革命卫队打击</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 伊朗局势三大焦点仍无突破。韩股波动有增无减，美光财报点燃存储热情，海力士拟赴美募资，苹果涨价。英国将迎十年第七位首相，美元看空叙事退潮？本周你错过哪些刺激行情？</p>\n<p><b>热点板块</b>: 综合, 半导体, 新能源</p>\n<br/><a href=\"https://liuruchuan.github.io/jin10-daily-market/\">查看完整报告 →</a>\n<hr/><p style=\"color:#999;font-size:12px;\">每日 08:00 自动推送</p>"
+  "notify_html": "<h3>金十数据日报</h3>\n<p><b>事件</b>: 20条 | 高置信度 4 · 中 16 · 弱 0</p>\n<p style=\"color:#c0392b;\"><b>重要事件:</b></p>\n<p style=\"margin:2px 0;font-size:13px;\">· <span class=\"section-news\">1. <b>续签行政令 巩固对伊拉克石油收入控制</b>——特朗普已再次下令，将伊拉克所有由其控制的石油收</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 【兴业银行：上调代理上海黄金交易所个人贵金属买卖业务延期合约保证金比例】金十数据6月27日讯，兴业银行发布公告，根据贵金属风险管理需要，我行将在北京时间2026</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 安全部门消息人士称，一架爆炸性无人机袭击了伊拉克埃尔比勒北部一个伊朗库尔德反对派组织的营地。</p>\n<p><b>热点板块</b>: 综合, 军工, 能源</p>\n<br/><a href=\"https://liuruchuan.github.io/jin10-daily-market/\">查看完整报告 →</a>\n<hr/><p style=\"color:#999;font-size:12px;\">每日 08:00 自动推送</p>"
 }
