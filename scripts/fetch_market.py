@@ -47,15 +47,14 @@ SECTOR_CODES = [
 
 
 def fetch_index_data() -> list[dict]:
-    """获取主要指数当日行情"""
+    """获取主要指数行情（周末/节假日自动回退到最近交易日）"""
     results = []
     import akshare as ak
     for code, name in INDEX_CODES:
         try:
-            # 使用 stock_zh_index_daily_em 获取日频数据
             df = ak.stock_zh_index_daily_em(symbol=code)
             if df is not None and not df.empty:
-                row = df.iloc[-1]  # 最新一天
+                row = df.iloc[-1]  # 最近一天（自动处理周末）
                 results.append({
                     "name": name,
                     "code": code,
@@ -64,9 +63,30 @@ def fetch_index_data() -> list[dict]:
                     "high": float(row["high"]),
                     "low": float(row["low"]),
                     "pct_change": float(row.get("pct_chg", 0)),
+                    "trade_date": str(row.get("date", "")),
                 })
         except Exception as e:
+            # 周末可能接口限流，回退到历史 CSV 的最新数据
             print(f"[WARN] {name}({code}) 获取失败: {e}")
+            try:
+                # 从本地 CSV 取缓存
+                if MARKET_CSV.exists():
+                    with open(MARKET_CSV, "r", encoding="utf-8") as ff:
+                        reader = list(csv.DictReader(ff))
+                        if reader:
+                            last = reader[-1]
+                            close = float(last.get(f"{name}_close", 0))
+                            pct = float(last.get(f"{name}_pct", 0))
+                            if close:
+                                results.append({
+                                    "name": name, "code": code,
+                                    "close": close, "open": close,
+                                    "high": close, "low": close,
+                                    "pct_change": pct or 0,
+                                    "trade_date": "cached",
+                                })
+            except Exception:
+                pass
     return results
 
 
