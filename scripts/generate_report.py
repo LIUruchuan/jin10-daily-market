@@ -240,7 +240,7 @@ document.getElementById('marketTable').innerHTML = html;
 
 
 def write_summary_json(events: list[dict], market: dict):
-    """写入 data/summary.json 供 Workflow 通知使用，同时生成通知 HTML"""
+    """写入 data/summary.json 供 Workflow 通知使用，同时生成通知 Markdown"""
     strong = [e for e in events if e.get("evidence") == "strong"]
     medium = [e for e in events if e.get("evidence") == "medium"]
     weak = [e for e in events if e.get("evidence") == "weak"]
@@ -254,28 +254,30 @@ def write_summary_json(events: list[dict], market: dict):
     top_sectors = [s for s, _ in sector_counts.most_common(3)]
     indices = market.get("indices", [])
 
-    # 生成通知 HTML
+    # 生成通知 Markdown（微信可渲染链接）
+    PAGE_URL = "https://liuruchuan.github.io/jin10-daily-market/"
     lines = []
-    lines.append('<h3>金十数据日报</h3>')
-    lines.append(f'<p><b>事件</b>: {len(events)}条 | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}</p>')
+    lines.append(f"**事件**: {len(events)}条 | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}")
+    lines.append("")
 
-    # 优先展示 high-confidence events
     if strong:
-        lines.append('<p style="color:#c0392b;"><b>重要事件:</b></p>')
+        lines.append("**重要事件**:")
         for e in strong[:3]:
-            lines.append(f'<p style="margin:2px 0;font-size:13px;">· {e.get("content","")[:80]}</p>')
+            lines.append(f"> {e.get('content','')[:80]}")
+        lines.append("")
 
     if top_sectors:
-        lines.append(f'<p><b>热点板块</b>: {", ".join(top_sectors)}</p>')
+        lines.append(f"**热点板块**: {', '.join(top_sectors)}")
+        lines.append("")
 
     if indices:
         idx = indices[0]
         pct = idx.get("pct_change", 0)
-        color = "#e74c3c" if pct >= 0 else "#27ae60"
-        lines.append(f'<p><b>{idx["name"]}</b>: <span style="color:{color};font-weight:bold;">{idx.get("close",0):.0f} ({pct:+.2f}%)</span></p>')
+        arrow = "↑" if pct >= 0 else "↓"
+        lines.append(f"**{idx['name']}**: {arrow} {idx.get('close',0):.0f} ({pct:+.2f}%)")
+        lines.append("")
 
-    lines.append('<br/><a href="https://liuruchuan.github.io/jin10-daily-market/">查看完整报告 →</a>')
-    lines.append('<hr/><p style="color:#999;font-size:12px;">每日 08:00 自动推送</p>')
+    lines.append(f"[查看完整报告]({PAGE_URL})")
 
     outcome = {
         "total_events": len(events),
@@ -284,8 +286,11 @@ def write_summary_json(events: list[dict], market: dict):
         "weak_events": len(weak),
         "top_sectors": top_sectors,
         "indices": indices,
-        "notify_html": "\n".join(lines),
+        "notify_text": "\n".join(lines),
     }
+    with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
+        json.dump(outcome, f, ensure_ascii=False, indent=2)
+    print("[SAVED] data/history/summary.json")
     with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
         json.dump(outcome, f, ensure_ascii=False, indent=2)
     print("[SAVED] data/history/summary.json")
