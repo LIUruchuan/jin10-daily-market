@@ -35,7 +35,7 @@ payload = json.dumps({"title": title, "desp": html}).encode("utf-8")
 req = urllib.request.Request(
     f"https://sctapi.ftqq.com/{SENDKEY}.send",
     data=payload,
-    headers={"Content-Type": "application/json"},
+    headers={"Content-Type": "application/json; charset=utf-8"},
     method="POST",
 )
 resp = json.loads(urllib.request.urlopen(req).read().decode())
