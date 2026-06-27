@@ -254,13 +254,30 @@ def write_summary_json(events: list[dict], market: dict):
     top_sectors = [s for s, _ in sector_counts.most_common(5)]
     indices = market.get("indices", [])
 
-    # 建立板块涨跌查找表（事件关联板块 → 对应涨跌幅）
+    # 建立板块涨跌查找表（模糊匹配，行业板块优先）
     sector_perf = {}
+    # 优先使用行业板块数据
+    industry_perf = market.get("sector_detail", {}).get("industry_perf", {})
+    sector_perf.update(industry_perf)
+    # 补充概念板块
     for sec in market.get("sectors", []):
         name = sec.get("name", "")
-        pct = sec.get("pct_change", 0)
-        if name:
-            sector_perf[name] = pct
+        if name and name not in sector_perf:
+            sector_perf[name] = sec.get("pct_change", 0)
+
+    # 模糊匹配函数
+    def find_sector_perf(ev_sector: str) -> tuple:
+        """在 sector_perf 中查找事件板块对应涨跌，支持模糊匹配"""
+        if ev_sector == "综合":
+            return None
+        # 精确匹配
+        if ev_sector in sector_perf:
+            return (ev_sector, sector_perf[ev_sector])
+        # 模糊匹配：行业板块名称包含关键词
+        for sname, pct in sorted(sector_perf.items(), key=lambda x: -len(x[0])):
+            if ev_sector in sname or sname in ev_sector:
+                return (sname, pct)
+        return None
 
     PAGE_URL = "https://liuruchuan.github.io/jin10-daily-market/"
     lines = []
@@ -279,14 +296,18 @@ def write_summary_json(events: list[dict], market: dict):
             content = e.get("content", "")[:80]
             line = f"> **{t}** {content}"
 
-            # 关联板块涨跌
+            # 关联板块涨跌（模糊匹配）
             perf_tags = []
+            seen_sectors = set()
             for s in ev_sectors:
                 s = s.strip()
-                if s in sector_perf:
-                    p = sector_perf[s]
-                    arrow = "↑" if p >= 0 else "↓"
-                    perf_tags.append(f"**{s}**{arrow}{p:+.1f}%")
+                match = find_sector_perf(s)
+                if match:
+                    sname, pct = match
+                    if sname not in seen_sectors:
+                        seen_sectors.add(sname)
+                        arrow = "🔴" if pct >= 0 else "🟢"
+                        perf_tags.append(f"**{sname}**{arrow}{pct:+.1f}%")
             if perf_tags:
                 line += f"  |  {' · '.join(perf_tags)}"
 
