@@ -22,35 +22,15 @@ summary_path = sys.argv[2] if len(sys.argv) > 2 else "data/summary.json"
 beijing = datetime.now(timezone(timedelta(hours=8)))
 date_str = beijing.strftime("%Y-%m-%d")
 
-# 读取通知 HTML
-html = "<p>no data</p>"
+# 读取通知内容（优先 Markdown，回退 HTML→纯文本）
+text = "no data"
 try:
     with open(summary_path, "r", encoding="utf-8") as f:
         d = json.load(f)
-        html = d.get("notify_html", html)
+        # 优先读 notify_text（Markdown格式，链接可点击）
+        text = d.get("notify_text") or d.get("notify_html", text)
 except Exception as e:
     print(f"[WARN] Failed to read summary.json: {e}")
-
-
-def strip_html(text: str) -> str:
-    """将 HTML 转为纯文本（Server酱微信端不支持HTML渲染，只支持纯文本/Markdown）"""
-    # 替换常见标签为纯文本等价物
-    text = re.sub(r'<br\s*/?>', '\n', text)
-    text = re.sub(r'</tr>', '\n', text)
-    text = re.sub(r'<hr\s*/?>', '\n---\n', text)
-    text = re.sub(r'</p>', '\n', text)
-    text = re.sub(r'</h\d>', '\n', text)
-    text = re.sub(r'</td>', ' ', text)
-    text = re.sub(r'</li>', '\n', text)
-    # 去掉所有剩余的 HTML 标签
-    text = re.sub(r'<[^>]+>', '', text)
-    # 清理多余空白
-    text = re.sub(r'\n{3,}', '\n\n', text)
-    text = re.sub(r' {2,}', ' ', text)
-    return text.strip()
-
-
-text = strip_html(html)
 
 title = f"{title_prefix} ({date_str})"
 payload = json.dumps({"title": title, "desp": text}).encode("utf-8")
