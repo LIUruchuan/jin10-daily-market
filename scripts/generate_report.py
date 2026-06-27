@@ -240,7 +240,7 @@ document.getElementById('marketTable').innerHTML = html;
 
 
 def write_summary_json(events: list[dict], market: dict):
-    """写入 data/summary.json 供 Workflow 通知使用，同时生成通知 Markdown"""
+    """写入 data/summary.json，生成完整的 Markdown 通知内容"""
     strong = [e for e in events if e.get("evidence") == "strong"]
     medium = [e for e in events if e.get("evidence") == "medium"]
     weak = [e for e in events if e.get("evidence") == "weak"]
@@ -251,33 +251,58 @@ def write_summary_json(events: list[dict], market: dict):
             if s.strip():
                 sector_counts[s.strip()] += 1
 
-    top_sectors = [s for s, _ in sector_counts.most_common(3)]
+    top_sectors = [s for s, _ in sector_counts.most_common(5)]
     indices = market.get("indices", [])
 
-    # 生成通知 Markdown（微信可渲染链接）
     PAGE_URL = "https://liuruchuan.github.io/jin10-daily-market/"
     lines = []
-    lines.append(f"**事件**: {len(events)}条 | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}")
-    lines.append("")
 
+    # 标题区
+    lines.append(f"**{len(events)}条事件** | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}")
+
+    # 高置信度事件（完整展示）
     if strong:
-        lines.append("**重要事件**:")
-        for e in strong[:3]:
-            lines.append(f"> {e.get('content','')[:80]}")
         lines.append("")
+        lines.append("---")
+        lines.append("### 高置信度事件")
+        for e in strong:
+            t = e.get("time", "")[-8:-3] if len(e.get("time", "")) > 8 else e.get("time", "")
+            s = e.get("sectors", "综合")
+            lines.append(f"> **{t}** [{s}] {e.get('content','')[:100]}")
+    
+    # 中等置信度（摘要）
+    if medium:
+        lines.append("")
+        lines.append("---")
+        lines.append("### 中等置信度")
+        for e in medium[:5]:
+            t = e.get("time", "")[-8:-3] if len(e.get("time", "")) > 8 else e.get("time", "")
+            lines.append(f"> {t} {e.get('content','')[:80]}")
+
+    # 弱信号（只报条数）
+    if weak:
+        lines.append("")
+        lines.append(f"*弱信号 {len(weak)} 条，详见完整报告*")
+
+    # 市场数据
+    if indices:
+        lines.append("")
+        lines.append("---")
+        lines.append("### 市场概况")
+        for idx in indices[:3]:
+            pct = idx.get("pct_change", 0)
+            arrow = "🔴" if pct >= 0 else "🟢"
+            lines.append(f"{idx['name']} {arrow} {idx.get('close',0):.0f} ({pct:+.2f}%)")
 
     if top_sectors:
-        lines.append(f"**热点板块**: {', '.join(top_sectors)}")
         lines.append("")
+        lines.append(f"**热点**: {', '.join(top_sectors)}")
 
-    if indices:
-        idx = indices[0]
-        pct = idx.get("pct_change", 0)
-        arrow = "↑" if pct >= 0 else "↓"
-        lines.append(f"**{idx['name']}**: {arrow} {idx.get('close',0):.0f} ({pct:+.2f}%)")
-        lines.append("")
+    # 可点击链接
+    lines.append("")
+    lines.append("[📄 查看完整报告与趋势](" + PAGE_URL + ")")
 
-    lines.append(f"[查看完整报告]({PAGE_URL})")
+    text = "\n".join(lines)
 
     outcome = {
         "total_events": len(events),
@@ -286,11 +311,8 @@ def write_summary_json(events: list[dict], market: dict):
         "weak_events": len(weak),
         "top_sectors": top_sectors,
         "indices": indices,
-        "notify_text": "\n".join(lines),
+        "notify_text": text,
     }
-    with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
-        json.dump(outcome, f, ensure_ascii=False, indent=2)
-    print("[SAVED] data/history/summary.json")
     with open(HISTORY_DIR / "summary.json", "w", encoding="utf-8") as f:
         json.dump(outcome, f, ensure_ascii=False, indent=2)
     print("[SAVED] data/history/summary.json")
