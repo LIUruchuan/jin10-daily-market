@@ -254,21 +254,43 @@ def write_summary_json(events: list[dict], market: dict):
     top_sectors = [s for s, _ in sector_counts.most_common(5)]
     indices = market.get("indices", [])
 
+    # 建立板块涨跌查找表（事件关联板块 → 对应涨跌幅）
+    sector_perf = {}
+    for sec in market.get("sectors", []):
+        name = sec.get("name", "")
+        pct = sec.get("pct_change", 0)
+        if name:
+            sector_perf[name] = pct
+
     PAGE_URL = "https://liuruchuan.github.io/jin10-daily-market/"
     lines = []
 
     # 标题区
     lines.append(f"**{len(events)}条事件** | 高置信度 {len(strong)} · 中 {len(medium)} · 弱 {len(weak)}")
 
-    # 高置信度事件（完整展示）
+    # 高置信度事件（完整展示 + 关联板块涨跌）
     if strong:
         lines.append("")
         lines.append("---")
         lines.append("### 高置信度事件")
         for e in strong:
             t = e.get("time", "")[-8:-3] if len(e.get("time", "")) > 8 else e.get("time", "")
-            s = e.get("sectors", "综合")
-            lines.append(f"> **{t}** [{s}] {e.get('content','')[:100]}")
+            ev_sectors = e.get("sectors", "综合").split(",")
+            content = e.get("content", "")[:80]
+            line = f"> **{t}** {content}"
+
+            # 关联板块涨跌
+            perf_tags = []
+            for s in ev_sectors:
+                s = s.strip()
+                if s in sector_perf:
+                    p = sector_perf[s]
+                    arrow = "↑" if p >= 0 else "↓"
+                    perf_tags.append(f"**{s}**{arrow}{p:+.1f}%")
+            if perf_tags:
+                line += f"  |  {' · '.join(perf_tags)}"
+
+            lines.append(line)
     
     # 中等置信度（摘要）
     if medium:
