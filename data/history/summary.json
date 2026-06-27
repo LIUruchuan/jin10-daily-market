@@ -1,13 +1,13 @@
 {
-  "total_events": 20,
-  "strong_events": 5,
-  "medium_events": 15,
+  "total_events": 18,
+  "strong_events": 7,
+  "medium_events": 11,
   "weak_events": 0,
   "top_sectors": [
     "综合",
     "半导体",
-    "大宗商品"
+    "新能源"
   ],
   "indices": [],
-  "notify_html": "<h3>金十数据日报</h3>\n<p><b>事件</b>: 20条 | 高置信度 5 · 中 15 · 弱 0</p>\n<p style=\"color:#c0392b;\"><b>重要事件:</b></p>\n<p style=\"margin:2px 0;font-size:13px;\">· 巴克莱：将2026年布伦特原油价格预期下调至每桶96美元，2027年预期下调至每桶85美元。</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 高盛策略师指出，半导体板块由于高杠杆和仓位过度拥挤，风险正在集聚。相比之下，处于估值低位的“超大规模云服务商”或将成为更稳健的投资选择。点击查看…</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 费城半导体指数日内跌幅扩大至超5%。</p>\n<p><b>热点板块</b>: 综合, 半导体, 大宗商品</p>\n<br/><a href=\"https://liuruchuan.github.io/jin10-daily-market/\">查看完整报告 →</a>\n<hr/><p style=\"color:#999;font-size:12px;\">每日 08:00 自动推送</p>"
+  "notify_html": "<h3>金十数据日报</h3>\n<p><b>事件</b>: 18条 | 高置信度 7 · 中 11 · 弱 0</p>\n<p style=\"color:#c0392b;\"><b>重要事件:</b></p>\n<p style=\"margin:2px 0;font-size:13px;\">· 【我国核聚变堆超导磁体研发取得重要突破】金十数据6月27日讯，今天（27日），国家重大科技基础设施“聚变堆主机关键系统综合研究设施”最大的超导部件——环向场磁体</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 【金十数据整理：中东局势跟踪（6月27日）】<br/><b>①伊朗</b><br/><span class=\"section-news\">1. 伊朗革命卫队打击</p>\n<p style=\"margin:2px 0;font-size:13px;\">· 伊朗局势三大焦点仍无突破。韩股波动有增无减，美光财报点燃存储热情，海力士拟赴美募资，苹果涨价。英国将迎十年第七位首相，美元看空叙事退潮？本周你错过哪些刺激行情？</p>\n<p><b>热点板块</b>: 综合, 半导体, 新能源</p>\n<br/><a href=\"https://liuruchuan.github.io/jin10-daily-market/\">查看完整报告 →</a>\n<hr/><p style=\"color:#999;font-size:12px;\">每日 08:00 自动推送</p>"
 }
