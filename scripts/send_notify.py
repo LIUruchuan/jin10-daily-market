@@ -2,9 +2,11 @@
 """
 Server酱通知发送器
 用法: python3 notify.py <title_prefix> <summary_json_path>
+将 summary.json 中的 notify_html 转为纯文本后发送（微信不支持HTML渲染）
 """
 import sys
 import json
+import re
 import urllib.request
 import os
 from datetime import datetime, timezone, timedelta
@@ -29,8 +31,29 @@ try:
 except Exception as e:
     print(f"[WARN] Failed to read summary.json: {e}")
 
+
+def strip_html(text: str) -> str:
+    """将 HTML 转为纯文本（Server酱微信端不支持HTML渲染，只支持纯文本/Markdown）"""
+    # 替换常见标签为纯文本等价物
+    text = re.sub(r'<br\s*/?>', '\n', text)
+    text = re.sub(r'</tr>', '\n', text)
+    text = re.sub(r'<hr\s*/?>', '\n---\n', text)
+    text = re.sub(r'</p>', '\n', text)
+    text = re.sub(r'</h\d>', '\n', text)
+    text = re.sub(r'</td>', ' ', text)
+    text = re.sub(r'</li>', '\n', text)
+    # 去掉所有剩余的 HTML 标签
+    text = re.sub(r'<[^>]+>', '', text)
+    # 清理多余空白
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = re.sub(r' {2,}', ' ', text)
+    return text.strip()
+
+
+text = strip_html(html)
+
 title = f"{title_prefix} ({date_str})"
-payload = json.dumps({"title": title, "desp": html}).encode("utf-8")
+payload = json.dumps({"title": title, "desp": text}).encode("utf-8")
 
 req = urllib.request.Request(
     f"https://sctapi.ftqq.com/{SENDKEY}.send",
