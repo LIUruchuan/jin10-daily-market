@@ -27,6 +27,9 @@ HEADERS = {
     "x-version": "1.0.0",
 }
 
+# 事件-市场关联表
+CORRELATION_CSV = HISTORY_DIR / "event_market_correlation.csv"
+
 
 def load_latest_events() -> list[dict]:
     """加载最新的事件 JSON"""
@@ -239,6 +242,56 @@ document.getElementById('marketTable').innerHTML = html;
     print(f"[SAVED] reports/index.html")
 
 
+def save_correlation_data(events: list[dict], market: dict):
+    """事件-市场关联数据沉淀（核心：便于后续统计分析）"""
+    beijing = datetime.now(timezone(timedelta(hours=8)))
+    date_str = beijing.strftime("%Y-%m-%d")
+
+    # 建立板块涨跌查找表
+    sector_perf = {}
+    industry_perf = market.get("sector_detail", {}).get("industry_perf", {})
+    sector_perf.update(industry_perf)
+    for sec in market.get("sectors", []):
+        name = sec.get("name", "")
+        if name and name not in sector_perf:
+            sector_perf[name] = sec.get("pct_change", 0)
+
+    def match_perf(ev_sector):
+        if ev_sector == "综合":
+            return None
+        if ev_sector in sector_perf:
+            return (ev_sector, sector_perf[ev_sector])
+        for sname, pct in sorted(sector_perf.items(), key=lambda x: -len(x[0])):
+            if ev_sector in sname or sname in ev_sector:
+                return (sname, pct)
+        return None
+
+    # 批量写入
+    is_new = not CORRELATION_CSV.exists()
+    with open(CORRELATION_CSV, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if is_new:
+            writer.writerow([
+                "date", "event_time", "evidence", "event_content",
+                "event_sectors", "matched_sector", "sector_pct_change",
+            ])
+        for e in events:
+            ev_sectors = e.get("sectors", "综合")
+            for s in ev_sectors.split(","):
+                s = s.strip()
+                match = match_perf(s)
+                if match:
+                    writer.writerow([
+                        date_str, e.get("time", ""),
+                        e.get("evidence", "medium"),
+                        e.get("content", "")[:200],
+                        ev_sectors,
+                        match[0], round(match[1], 2),
+                    ])
+
+    print(f"[SAVED] event_market_correlation.csv 更新 {date_str}")
+
+
 def write_summary_json(events: list[dict], market: dict):
     """写入 data/summary.json，生成完整的 Markdown 通知内容"""
     strong = [e for e in events if e.get("evidence") == "strong"]
@@ -382,6 +435,9 @@ def main():
 
     # 写入 summary JSON（供 Workflow 通知读取）
     write_summary_json(events, market)
+
+    # 事件-市场关联数据沉淀（核心分析数据）
+    save_correlation_data(events, market)
 
     update_index_html()
 
