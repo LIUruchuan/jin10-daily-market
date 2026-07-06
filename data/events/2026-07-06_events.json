@@ -1,0 +1,137 @@
+[
+  {
+    "id": "20260706220649466800",
+    "time": "2026-07-06 22:06:49",
+    "content": "美国总统特朗普：（谈俄乌冲突）我认为我们正在越来越接近（结束冲突）。",
+    "important": 0,
+    "sectors": "军工",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220630651800",
+    "time": "2026-07-06 22:06:30",
+    "content": "美国总统特朗普：将与北约讨论俄罗斯-乌克兰问题。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220606513800",
+    "time": "2026-07-06 22:06:06",
+    "content": "美国总统特朗普：（谈俄乌冲突）我们正在进行谈判，看看是否能结束这场战争。",
+    "important": 0,
+    "sectors": "军工",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220541847800",
+    "time": "2026-07-06 22:05:41",
+    "content": "美国总统特朗普：普京感受到压力。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220440142800",
+    "time": "2026-07-06 22:04:40",
+    "content": "以色列央行：将下次利率决策日期从8月31日推迟至9月1日。",
+    "important": 0,
+    "sectors": "银行,军工",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220323668800",
+    "time": "2026-07-06 22:03:23",
+    "content": "据英国金融时报：德国将借款8000亿欧元进行历史性军备重整。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220235263800",
+    "time": "2026-07-06 22:02:35",
+    "content": "美国6月ISM非制造业供应商交付指数 54.4，前值55.2。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220222194800",
+    "time": "2026-07-06 22:02:22",
+    "content": "美国6月ISM非制造业库存指数 51.2，前值62.5。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220143382800",
+    "time": "2026-07-06 22:01:43",
+    "content": "<b>美国6月全球供应链压力指数 1.25，前值由1.77修正为1.81。</b>",
+    "important": 1,
+    "sectors": "综合",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220025142800",
+    "time": "2026-07-06 22:00:25",
+    "content": "金十图示：2026年07月06日（周一）全球股市指数-美洲市场（盘初）",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": true
+  },
+  {
+    "id": "20260706220025043800",
+    "time": "2026-07-06 22:00:25",
+    "content": "美国6月谘商会就业趋势指数 106.69，前值107.01。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220002144800",
+    "time": "2026-07-06 22:00:02",
+    "content": "美国6月ISM非制造业物价指数 67.7，前值71.3。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220002143800",
+    "time": "2026-07-06 22:00:02",
+    "content": "美国6月ISM非制造业就业指数 51.2，前值47.9。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220002137800",
+    "time": "2026-07-06 22:00:02",
+    "content": "美国6月ISM非制造业新订单指数 55.1，前值57.3。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260706220002122800",
+    "time": "2026-07-06 22:00:02",
+    "content": "<b>美国6月ISM非制造业PMI 54，预期54，前值54.5。</b>",
+    "important": 1,
+    "sectors": "综合",
+    "evidence": "strong",
+    "has_market_data": false
+  }
+]
