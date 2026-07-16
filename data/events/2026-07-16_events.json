@@ -1,0 +1,173 @@
+[
+  {
+    "id": "20260716153536689800",
+    "time": "2026-07-16 15:35:36",
+    "content": "瑞士央行：各项调查显示，2027年的工资增长预期呈现适度增长势头。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153524705800",
+    "time": "2026-07-16 15:35:24",
+    "content": "瑞士央行：就业增长目前适度，低于长期平均水平。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153518572800",
+    "time": "2026-07-16 15:35:18",
+    "content": "瑞士央行：由于地缘政治形势不确定，瑞士法郎大幅升值的风险依然存在。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153507365800",
+    "time": "2026-07-16 15:35:07",
+    "content": "瑞士央行：当前劳动力市场信号疲软。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153504142800",
+    "time": "2026-07-16 15:35:04",
+    "content": "瑞士央行：不确定性依然很高。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153459774800",
+    "time": "2026-07-16 15:34:59",
+    "content": "瑞士央行：目前，通胀不太可能迅速上升至2%以上或跌入负区间。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153436133800",
+    "time": "2026-07-16 15:34:36",
+    "content": "瑞士央行：经济增长可能低于预期，通胀可能高于预期。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153428099800",
+    "time": "2026-07-16 15:34:28",
+    "content": "瑞士央行：如果霍尔木兹海峡的通行受到长期影响，能源市场的形势可能会加剧。",
+    "important": 0,
+    "sectors": "银行,能源",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153421933800",
+    "time": "2026-07-16 15:34:21",
+    "content": "瑞士央行：由于能源价格上涨，短期内通胀可能会增加。",
+    "important": 0,
+    "sectors": "银行,能源,金融",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153417427800",
+    "time": "2026-07-16 15:34:17",
+    "content": "瑞士央行：预计2026年GDP增长约为1%，2027年约为1.5%。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153416865800",
+    "time": "2026-07-16 15:34:16",
+    "content": "黄金期权市场显示多空资金入场意愿低迷，鲜有三位数以上新增持仓；现价附近的40XX一线，多头减仓、空头增仓特征较为明显，该位置或将持续构成上方压制。",
+    "important": 1,
+    "sectors": "贵金属",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153413287800",
+    "time": "2026-07-16 15:34:13",
+    "content": "瑞士央行：料在整个预测期内处于价格稳定范围内。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153354175800",
+    "time": "2026-07-16 15:33:54",
+    "content": "瑞士央行：假设瑞士央行政策利率保持不变，未来几个季度通胀应会进一步上升。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153345770800",
+    "time": "2026-07-16 15:33:45",
+    "content": "瑞士央行：中期通胀压力与三月份的货币政策评估相比几乎没有变化。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153340319800",
+    "time": "2026-07-16 15:33:40",
+    "content": "瑞士央行：第二轮效应强于预期也被列为通胀的风险因素。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153324528800",
+    "time": "2026-07-16 15:33:24",
+    "content": "瑞士央行：企业预计未来几个季度营业额将大幅增长。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153308540800",
+    "time": "2026-07-16 15:33:08",
+    "content": "瑞士央行：企业对短期通胀预期有所上升。",
+    "important": 0,
+    "sectors": "银行,金融",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153300132800",
+    "time": "2026-07-16 15:33:00",
+    "content": "瑞士央行：人工智能已获得一定影响力，但迄今为止尚未出现重大广泛的结构性变化。",
+    "important": 0,
+    "sectors": "银行,半导体",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260716153254146800",
+    "time": "2026-07-16 15:32:54",
+    "content": "瑞士央行：中东局势的再次升级可能会显著削弱经济活动，并加大对瑞士法郎的上行压力。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "weak",
+    "has_market_data": false
+  }
+]
