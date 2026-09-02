@@ -1,0 +1,173 @@
+[
+  {
+    "id": "20260902111652938800",
+    "time": "2026-09-02 11:16:52",
+    "content": "<b>新西兰联储主席布雷曼：官方现金利率（OCR）可能会进一步上调，将评估此前加息带来的影响。</b>",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111601992800",
+    "time": "2026-09-02 11:16:01",
+    "content": "通胀压力仍然偏高，但就业动能已经出现降温迹象。美元重新测试100关口，周五非农将决定加息交易能否继续升温。",
+    "important": 1,
+    "sectors": "银行,金融",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111531767800",
+    "time": "2026-09-02 11:15:31",
+    "content": "新西兰联储主席布雷曼：可能需要一些时间来评估政策立场。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "weak",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111518730800",
+    "time": "2026-09-02 11:15:18",
+    "content": "新西兰联储主席布雷曼：选举不会影响我们的政策决策。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111508067800",
+    "time": "2026-09-02 11:15:08",
+    "content": "新西兰联储主席布雷曼：当前并未设定固定的政策路径，利率上调的时机高度不确定。",
+    "important": 1,
+    "sectors": "银行",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111433507800",
+    "time": "2026-09-02 11:14:33",
+    "content": "新西兰联储主席布雷曼：我们正在将官方现金利率（OCR）上调至中性水平，但货币政策仍具宽松性。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111419553800",
+    "time": "2026-09-02 11:14:19",
+    "content": "【期货盯盘神器专属文章】市场深谈：油价明明已经高位震荡，TD Securities却提醒，真正的风险可能不在原油本身，而在汽油、柴油和库存链条。能源紧张会不会重新点燃通胀担忧？黄金、白银和铜又会如何被牵动？点击阅读。",
+    "important": 1,
+    "sectors": "能源,贵金属,大宗商品,金融",
+    "evidence": "strong",
+    "has_market_data": true
+  },
+  {
+    "id": "20260902111316111800",
+    "time": "2026-09-02 11:13:16",
+    "content": "新西兰联储主席布雷曼：我们可以在支持经济的同时降低通胀。",
+    "important": 0,
+    "sectors": "金融",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111126172800",
+    "time": "2026-09-02 11:11:26",
+    "content": "美国商业原油库存回升并未压低油价，反而凸显当前市场的核心并非原油总量不足，而是霍尔木兹运输受限、炼化产能错配与成品油供应持续紧张。",
+    "important": 1,
+    "sectors": "能源",
+    "evidence": "strong",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111119706800",
+    "time": "2026-09-02 11:11:19",
+    "content": "金十图示：2026年09月02日（周三）全球汽车制造商市值变化",
+    "important": 0,
+    "sectors": "汽车",
+    "evidence": "medium",
+    "has_market_data": true
+  },
+  {
+    "id": "20260902111114848800",
+    "time": "2026-09-02 11:11:14",
+    "content": "新西兰联储主席布雷曼：当前官方现金利率的走势与5月份的情况非常相似。",
+    "important": 0,
+    "sectors": "银行",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111051301800",
+    "time": "2026-09-02 11:10:51",
+    "content": "新西兰联储主席布雷曼：关键问题在于经济复苏能否如预期般进一步扩大。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902111049606800",
+    "time": "2026-09-02 11:10:49",
+    "content": "【腾讯云：腾讯混元生视频部分接口下线及服务调整】金十数据9月2日讯，腾讯云发布公告，为持续提供更优质、高效、稳定的AI视频生成服务，腾讯混元生视频历史旧版专项接口，将按计划分阶段实施下线。目前TokenHub控制台已上线，作为新一代模型的统一接入与管理平台，提供模型在线体验、API调用、用量与费用管理等一站式能力。切换至TokenHub后，支持同一平台统一管理所有新版模型，调用更便捷、用量与成本更透明，迁移与运维也将更加高效。",
+    "important": 0,
+    "sectors": "半导体",
+    "evidence": "medium",
+    "has_market_data": true
+  },
+  {
+    "id": "20260902110935977800",
+    "time": "2026-09-02 11:09:35",
+    "content": "新西兰联储主席布雷曼：预计新西兰房价将从2027年中期开始逐步上涨。",
+    "important": 0,
+    "sectors": "房地产",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902110935037800",
+    "time": "2026-09-02 11:09:35",
+    "content": "<span class=\"section-news\">1. SK会长崔泰源：考虑在日本建存储芯片工厂，或与铠侠联合生产。</span><br/><span class=\"section-news\">2. SK海力士Q2硅晶圆采购金额环比暴增104%。</span><br/><span class=\"section-news\">3. 17个月涨幅1370.59%：集邦称8月全球DDR4内存合约价创历史新高。</span><br/><span class=\"section-news\">4. 机构：存储芯片第三季度价格涨幅明显收窄，部分环比涨幅在10%以内。</span><br/><span class=\"section-news\">5. 三星公布下一代存储器战略：HBM5性能目标提升至HBM4E两倍。</span><br/><span class=\"section-news\">6. 报道称三星存储器业务部门将2031年前约70%的产能分配给长约订单，HBM抢货情况相当激烈。</span><br/><span class=\"section-news\">7. 三星电机签署超1万亿韩元的AI服务器MLCC供应合同。</span><br/><span class=\"section-news\">8. 三星SDI将向全球顶尖储能系统公司供应磷酸铁锂电池。</span><br/><span class=\"section-news\">9. 郭明錤：英伟达重启推理预填充优化芯片Rubin CPX项目。</span><br/><span class=\"section-news\">10. 集邦咨询：二季度前五大Enterprise SSD品牌营收翻倍至近375.9亿美元。</span>",
+    "important": 1,
+    "sectors": "半导体,新能源,金融",
+    "evidence": "strong",
+    "has_market_data": true
+  },
+  {
+    "id": "20260902110926193800",
+    "time": "2026-09-02 11:09:26",
+    "content": "新西兰联储主席布雷曼：经济复苏仍不均衡。随着经济增长扩大，预计失业率将下降。",
+    "important": 0,
+    "sectors": "综合",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902110909659800",
+    "time": "2026-09-02 11:09:09",
+    "content": "新西兰联储主席布雷曼：出口数据表现好于预期。",
+    "important": 0,
+    "sectors": "出口贸易",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902110857448800",
+    "time": "2026-09-02 11:08:57",
+    "content": "新西兰联储主席布雷曼：我们致力于将通胀率恢复到目标水平；货币政策在抑制通货膨胀方面发挥着作用。",
+    "important": 0,
+    "sectors": "金融",
+    "evidence": "medium",
+    "has_market_data": false
+  },
+  {
+    "id": "20260902110807421800",
+    "time": "2026-09-02 11:08:07",
+    "content": "【期货热点追踪】官方数据确认播种面积减少4.1万公顷，甘蔗价格博弈加剧，印度蔗农要求将国家建议价（SAP）提高至600卢比/公担！点击阅读。",
+    "important": 1,
+    "sectors": "综合",
+    "evidence": "strong",
+    "has_market_data": true
+  }
+]
